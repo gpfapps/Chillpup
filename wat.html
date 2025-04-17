@@ -1,34 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TON Wallet Connection</title>
-    <link rel="stylesheet" href="material/css/w.css">
-</head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TON Wallet Connection</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding-top: 100px;
+    }
+    .wallet-connect-ui {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+    .status {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+    .send-btn {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #ffc107;
+      color: black;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 20px;
+      display: none;
+    }
+  </style>
 
+  <!-- TON Connect SDK UI -->
+  <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
+</head>
 <body>
 
-    <!-- Open Wallet Pop-up Button -->
-    <button id="openModalBtn" class="open-button">Connect TON Wallet</button>
-   
-  
-    <!-- Modal Window -->
-    <div id="walletModal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn">&times;</span>
-            <h2>Connect Your TON Wallet</h2>
-            <p>Please connect your Telegram TON wallet to continue.</p>
+  <h2>Connect Your TON Wallet</h2>
+  <p>Please connect your Telegram TON wallet to continue.</p>
 
-            <div class="wallet-options">
-                <button id="connectWallet" class="wallet-btn">Connect Wallet</button>
-                <button id="cancelWallet" class="cancel-btn">Cancel</button>
-            </div>
+  <div id="ton-connect" class="wallet-connect-ui"></div>
 
-            <div id="statusMessage" class="status"></div>
-        </div>
-    </div>
+  <div id="statusMessage" class="status"></div>
+  <button id="sendTransaction" class="send-btn">Send 0.01 TON</button>
 
-    <script src="material/js/w.js"></script>
+  <script>
+    const statusMessage = document.getElementById("statusMessage");
+    const sendTxBtn = document.getElementById("sendTransaction");
+
+    // Initialize TON Connect UI
+    const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
+      manifestUrl: "https://ton-connect.github.io/demo-dapp-with-react/tonconnect-manifest.json",
+      buttonRootId: "ton-connect"
+    });
+
+    tonConnectUI.onStatusChange(wallet => {
+      if (wallet) {
+        statusMessage.innerText = `Connected: ${wallet.account.address}`;
+        sendTxBtn.style.display = "inline-block";
+      } else {
+        statusMessage.innerText = "Wallet not connected.";
+        sendTxBtn.style.display = "none";
+      }
+    });
+
+    sendTxBtn.addEventListener("click", async () => {
+      try {
+        await tonConnectUI.sendTransaction({
+          valid_until: Math.floor(Date.now() / 1000) + 600,
+          messages: [{
+            address: "EQCd10VwIFvbO7vPRNqroUEd5IDAZRGeEdYdV9C0tOJJnUp4",
+            amount: "10000000"
+          }]
+        });
+        statusMessage.innerText = "Transaction sent successfully!";
+      } catch (err) {
+        statusMessage.innerText = "Transaction failed: " + err.message;
+      }
+    });
+  </script>
 </body>
 </html>
