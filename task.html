@@ -1,62 +1,186 @@
+
 <!DOCTYPE html>
-<html lang=en>
+<html lang="en">
 <head>
-    <script src='//whephiwums.com/sdk.js' data-zone='9227916' data-sdk='show_9227916'></script>
-<meta charset=UTF-8>
-    <meta name=viewport content=width=device-width, initial-scale=1.0>
-    <title>Invite Friends</title>
-    <script src='//whephiwums.com/sdk.js' data-zone='9227916' data-sdk='show_9227916'></script>
-    <link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css>
-    <link rel=stylesheet href=material/css/styles.css>
-    <link rel=stylesheet href=material/css/st.css>
+<script src='//whephiwums.com/sdk.js' data-zone='9227916' data-sdk='show_9227916'></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Tasks</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #000;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+        #balance-container {
+            margin: 20px;
+            font-size: 18px;
+        }
+        .task-container {
+            margin: 10px auto;
+            max-width: 600px;
+        }
+        .task {
+            margin: 10px auto;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid #000000;
+            border-radius: 12px;
+            background-color: #333030;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+            width: 80%;
+        }
+        .task:hover {
+            transform: translateY(-5px);
+        }
+        .task-detail {
+            display: flex;
+            align-items: center;
+        }
+        .task-image img {
+            border-radius: 8px;
+            margin-right: 10px;
+        }
+        .task h4 {
+            margin: 0;
+            font-size: 18px;
+            color: #f2f2f2;
+        }
+        .task-data {
+            display: flex;
+            align-items: center;
+            margin-top: 8px;
+        }
+        .task-data img {
+            margin-right: 5px;
+        }
+        .task-data h5 {
+            margin: 0;
+            color: #ffcc00;
+            font-size: 18px;
+        }
+        .task-button {
+            background-color: #ffffff;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+        .task-button:hover:not(:disabled) {
+            background-color: #a2aaa0;
+        }
+        .task-button:disabled {
+            background-color: #4caf50;
+            color: white;
+            cursor: not-allowed;
+        }
+        .tasks.scrollable {
+            max-height: 590px;
+            overflow-y: auto;
+            margin: 20px auto;
+            width: 90%;
+            padding-right: 10px;
+            border: 1px solid #000000;
+        }
+        @media (max-width: 600px) {
+            .task-container {
+                max-width: 100%;
+            }
+            .task-button {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+            .task h4 {
+                font-size: 16px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class=frens-invite>
-        <div class=frens-invite-button>
-            <input type=text value=https://t.me/CHILLPUP_BOT/chpupcoin id=link readonly>
-            <button id=copyButton>Copy Link</button>
-        </div>
-    </div>
-
-    <nav class=bottom-nav>
-        <a href="home.html" class="nav-item"><i class="fas fa-home"></i><span>HOME</span></a>
-        <a href="leaderboard.html" class="nav-item"><i class="fas fa-trophy"></i><span>LEADERBOARD</span></a>
-        <a href="invite-friends.html" class="nav-item"><i class="fas fa-user-friends"></i><span>FRIENDS</span></a>
-        <a href="task.html" class="nav-item"><i class="fas fa-tasks"></i><span>TASKS</span></a>
-        <a href="balance.html" class="nav-item"><i class="fas fa-wallet"></i><span>BALANCE</span></a>
-    </nav>
-
-    
-            // Reset claimed tasks every hour
-            const now = Date.now();
-            const lastReset = parseInt(localStorage.getItem('lastTaskReset')) || 0;
-            const oneHour = 60 * 60 * 1000;
-            if (now - lastReset > oneHour) {
-                localStorage.removeItem('claimedTasks');
-                localStorage.setItem('lastTaskReset', now);
-            }
-            // Show ad when page loads
-            show_9227916().catch(error => console.error('Ad load error:', error));
-
-            // Rewarded interstitial
-            show_9227916().then(() => {
-                // You need to add your user reward function here
-                const currentBalance = parseInt(localStorage.getItem('balance')) || 0;
-                const newBalance = currentBalance + 100;
-                localStorage.setItem('balance', newBalance);
-                alert('You have seen an ad and earned 100 chillpup!');
-            });
-
-            // Copy link to clipboard
-            document.getElementById('copyButton').addEventListener('click', function() {
-                const link = document.getElementById('link');
-                link.select();
-                document.execCommand('copy');
-                alert('Link copied to clipboard!');
-            });
+<div id="balance-container">
+    <h2><b>_____________</b></h2>
+    <h2><b> TASKS </b></h2>
+    <span id="balance">0</span>  🦴 total dogs
+</div>
+<h2><b>_______________</b></h2>
+<section class="tasks scrollable">
+    <div class="task-container" id="task-list"></div>
+</section>
+<nav class="bottom-nav">
+    <a href="home.html" class="nav-item"><i class="fas fa-home"></i><span>HOME</span></a>
+    <a href="leaderboard.html" class="nav-item"><i class="fas fa-trophy"></i><span>LEADERBOARD</span></a>
+    <a href="invite-friends.html" class="nav-item"><i class="fas fa-user-friends"></i><span>FRIENDS</span></a>
+    <a href="task.html" class="nav-item"><i class="fas fa-tasks"></i><span>TASKS</span></a>
+    <a href="balance.html" class="nav-item"><i class="fas fa-wallet"></i><span>BALANCE</span></a>
+</nav>
+<script>
+    const tasks = [
+        { id: 'yt1', title: 'Subscribe', points: 100, url: 'https://youtube.com/@html-hero?si=5-fOU4FeAD5mSvK-' , img: 'you.gif' },
+        { id: 'tele1', title: 'Subscribe', points: 100, url: 'https://youtu.be/JqVhry6_O8A?si=cmsyr9Ty1R5VPk9U' , img: 'tele.png' },
+        { id: 'fa1', title: 'Follow', points: 100, url: 'https://youtu.be/yDLwl-48N3A?si=8loBzpjvnnI4K8HW' , img: 'fa.png' },
+        { id: 'insta1', title: 'Follow', points: 100, url: 'https://youtu.be/aScX2QccdD0?si=hnB-DpVremlzsAXY' , img: 'ista.png' },
+        { id: 'yt2', title: 'Watch video', points: 100, url: 'https://youtu.be/ntIxCfgl9KE?si=Aaf5BsuYt1nN0B1u' , img: 'you.gif' }
+    ];
+    const balanceElement = document.getElementById('balance');
+    const taskList = document.getElementById('task-list');
+    function loadBalance() {
+        const balance = parseInt(localStorage.getItem('balance')) || 0;
+        balanceElement.textContent = balance;
+    }
+    function completeTask(button, id, points, url) {
+        window.open(url, '_blank');
+        const claimed = JSON.parse(localStorage.getItem('claimedTasks') || '[]');
+        if (!claimed.includes(id)) {
+            claimed.push(id);
+            localStorage.setItem('claimedTasks', JSON.stringify(claimed));
+            const newBalance = parseInt(localStorage.getItem('balance')) + points;
+            localStorage.setItem('balance', newBalance);
+            balanceElement.textContent = newBalance;
+        }
+        button.disabled = true;
+        button.textContent = '✅ Claimed';
+    }
+    function renderTasks() {
+        const claimed = JSON.parse(localStorage.getItem('claimedTasks') || '[]');
+        tasks.forEach(task => {
+            const taskDiv = document.createElement('div');
+            taskDiv.className = 'task';
+            const claimedStatus = claimed.includes(task.id);
+            taskDiv.innerHTML = `
+                <div class="task-detail">
+                    <div class="task-image">
+                        <img src="material/images/${task.img}" width="45px" alt="">
+                    </div>
+                    <div>
+                        <h4>${task.title}</h4>
+                        <div class="task-data">
+                            <img src="material/images/logo.png" width="20px" alt="Coin Icon">
+                            <h5>${task.points}</h5>
+                        </div>
+                    </div>
+                </div>
+                <button class="task-button" ${claimedStatus ? 'disabled' : ''} onclick="completeTask(this, '${task.id}', ${task.points}, '${task.url}')">
+                    ${claimedStatus ? '✅ Claimed' : '🦴 Claim'}
+                </button>
+            `;
+            taskList.appendChild(taskDiv);
         });
-    </script>
-    <script src=material/js/cojs.js></script>
-    <script src=material/js/scripts.js></script>
+    }
+    window.onload = () => {
+        loadBalance();
+        renderTasks();
+    };
+</script>
 </body>
 </html>
